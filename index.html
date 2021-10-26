@@ -27,11 +27,19 @@
     <script>
       // JavaScript goes here
       const options = {
-        center: [30, -26],
-        zoom: 2,
+        center: [38, -85.7],
+        zoom: 8,
+        minZoom: 8,
+        maxZoom: 16,
+        maxBounds: [
+          [39.44, -80.43],
+          [36.53, -90.97]
+        ],
       };
 
       const map = L.map('map', options);
+      console.log(map.getBounds())
+      console.log(map.getZoom())
 
       L.tileLayer(
         'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
