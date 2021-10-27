@@ -38,7 +38,7 @@
         center: [38, -85.7],
         zoom: 8,
         minZoom: 8,
-        maxZoom: 16,
+        maxZoom: 10,
         maxBounds: [
           [39.44, -80.43],
           [36.53, -90.97]
@@ -51,9 +51,47 @@
         opacity: 1,
       };
       
+      const mineOption = {
+        fillColor: '#ffcc00',
+        fillOpacity: .9,
+        color: '#ff9900',
+        weight: 1.75,
+      }
       const senseOption1= {
-        color: '#ff6e00',
+        color: '#2b83ba',
+        weight: 0,
+        fillOpacity: .4,
       };
+
+      const senseOption2= {
+        color: '#abdda4',
+        weight: 0,
+        fillOpacity: .4,
+      }
+
+      const senseOption3= {
+        color: '#ffffbf',
+        weight: 0,
+        fillOpacity: .4,
+      }
+
+      const senseOption4= {
+        color: '#fdae61',
+        weight: 0,
+        fillOpacity: .4,
+      }
+
+      const senseOption5= {
+        color: '#d7191c',
+        weight: 0,
+        fillOpacity: .4,
+      }
+
+      const senseOther= {
+        color: '#66ff66',
+        weight: 0,
+        fillOpacity: 0,
+      }
 
       const map = L.map('map', options);
       // console.log(map.getBounds())
@@ -78,11 +116,28 @@
       });
 
       function drawMap(kyRiversData, kyMinesData, kyWaterData) {
+        L.geoJson(kyWaterData, {
+          style:function(feature) {
+            let type=feature.properties.SENSITIVIT;
+            return type === '1'
+            ? senseOption1
+            : type === '2'
+            ? senseOption2
+            : type === '3'
+            ? senseOption3
+            : type === '4'
+            ? senseOption4
+            : type === '5'
+            ? senseOption5
+            : senseOther;
+          },
+        }).addTo(map);
+        L.geoJson(kyMinesData, {
+          style:mineOption,
+        }).addTo(map);
         L.geoJson(kyRiversData, {
           style:riverOption,
         }).addTo(map);
-        L.geoJson(kyMinesData).addTo(map);
-        L.geoJson(kyWaterData).addTo(map);
       }
 
     </script>
