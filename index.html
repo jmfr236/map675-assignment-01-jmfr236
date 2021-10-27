@@ -20,6 +20,12 @@
         background: rgba(0, 0, 0, 0.75)
         }
 
+        .tooltip {
+          color: white;
+          background: gray;
+          border: 1;
+          font-size: 1.25em;
+        }
   
     </style>
   </head>
@@ -34,6 +40,7 @@
   ></script>
     <script>
       // JavaScript goes here
+      // set map style
       const options = {
         center: [38, -85.7],
         zoom: 8,
@@ -45,18 +52,22 @@
         ],
       };
 
+      // set river style
       const riverOption = {
         color: '#0099ff',
         weight: 1,
         opacity: 1,
       };
       
+      // set mine style
       const mineOption = {
         fillColor: '#ffcc00',
         fillOpacity: .9,
         color: '#ff9900',
         weight: 1.75,
       }
+
+      // set ground water sensitivity style
       const senseOption1= {
         color: '#2b83ba',
         weight: 0,
@@ -96,6 +107,16 @@
       const map = L.map('map', options);
       // console.log(map.getBounds())
       // console.log(map.getZoom())
+      map.createPane('labels');
+      map.getPane('labels').style.zIndex = 650;
+      map.getPane('labels').style.pointerEvents = 'none';
+      L.tileLayer(
+        'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_only_labels/{z}/{x}/{y}.png',
+        {
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+          pane: 'labels',
+        }
+      ).addTo(map);
 
       /*L.tileLayer(
         'https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png',
@@ -106,7 +127,7 @@
           maxZoom: 19,
         }
       ).addTo(map);*/
-      const color_scale = ["#fff7ec", "#fee8c8", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548"];
+      
       $.when(
         $.getJSON('data/ky-rivers-simplified.json'),
         $.getJSON('data/ky-active-mines-simplified.json'),
@@ -123,6 +144,8 @@
             ? senseOption1
             : type === '2'
             ? senseOption2
+            : type === '2.5'
+            ? senseOption2
             : type === '3'
             ? senseOption3
             : type === '4'
@@ -131,6 +154,23 @@
             ? senseOption5
             : senseOther;
           },
+          onEachFeature: function (feature, layer) {
+            let tooltip = "Sensitivity level " + feature.properties.SENSITIVIT;
+            layer.bindTooltip(tooltip, {
+              sticky: true,
+              className: 'tooltip',
+            });
+            layer.on('mouseover', function (e){
+              this.setStyle({
+                fillOpacity: .6,
+              });
+            });
+            layer.on('mouseout', function (e) {
+              this.setStyle({
+                fillOpacity:.4
+              })
+            })
+          }
         }).addTo(map);
         L.geoJson(kyMinesData, {
           style:mineOption,
