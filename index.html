@@ -19,6 +19,8 @@
         padding: 0;
         background: rgba(0, 0, 0, 0.75)
         }
+
+  
     </style>
   </head>
 
@@ -41,6 +43,16 @@
           [39.44, -80.43],
           [36.53, -90.97]
         ],
+      };
+
+      const riverOption = {
+        color: '#0099ff',
+        weight: 1,
+        opacity: 1,
+      };
+      
+      const senseOption1= {
+        color: '#ff6e00',
       };
 
       const map = L.map('map', options);
@@ -66,10 +78,13 @@
       });
 
       function drawMap(kyRiversData, kyMinesData, kyWaterData) {
-        L.geoJson(kyRiversData).addTo(map);
+        L.geoJson(kyRiversData, {
+          style:riverOption,
+        }).addTo(map);
         L.geoJson(kyMinesData).addTo(map);
         L.geoJson(kyWaterData).addTo(map);
       }
+
     </script>
   </body>
 </html>
