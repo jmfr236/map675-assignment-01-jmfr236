@@ -107,6 +107,7 @@
       const map = L.map('map', options);
       // console.log(map.getBounds())
       // console.log(map.getZoom())
+      // create panes to place labels over top of data
       map.createPane('labels');
       map.getPane('labels').style.zIndex = 650;
       map.getPane('labels').style.pointerEvents = 'none';
@@ -128,6 +129,7 @@
         }
       ).addTo(map);*/
       
+      // add layers
       $.when(
         $.getJSON('data/ky-rivers-simplified.json'),
         $.getJSON('data/ky-active-mines-simplified.json'),
@@ -136,8 +138,11 @@
         drawMap(kyRiversData, kyMinesData, kyWaterData);
       });
 
+      // drawMap function
       function drawMap(kyRiversData, kyMinesData, kyWaterData) {
+        // add groundwater sensitivity layer
         L.geoJson(kyWaterData, {
+          // set style
           style:function(feature) {
             let type=feature.properties.SENSITIVIT;
             return type === '1'
@@ -154,6 +159,7 @@
             ? senseOption5
             : senseOther;
           },
+          // set tooltip content and visual affordance
           onEachFeature: function (feature, layer) {
             let tooltip = "Sensitivity level " + feature.properties.SENSITIVIT;
             layer.bindTooltip(tooltip, {
@@ -172,9 +178,11 @@
             })
           }
         }).addTo(map);
+        // add mine data
         L.geoJson(kyMinesData, {
           style:mineOption,
         }).addTo(map);
+        // add river data
         L.geoJson(kyRiversData, {
           style:riverOption,
         }).addTo(map);
