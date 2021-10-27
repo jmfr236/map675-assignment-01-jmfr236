@@ -161,7 +161,7 @@
           },
           // set tooltip content and visual affordance
           onEachFeature: function (feature, layer) {
-            let tooltip = "Sensitivity level " + feature.properties.SENSITIVIT;
+            let tooltip = "Sensitivity " + feature.properties.SENSITIVIT;
             layer.bindTooltip(tooltip, {
               sticky: true,
               className: 'tooltip',
